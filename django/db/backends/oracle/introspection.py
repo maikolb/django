@@ -201,9 +201,9 @@ class DatabaseIntrospection(BaseDatabaseIntrospection):
         cursor.execute("""
             SELECT
                 user_constraints.constraint_name,
-                rtrim(xmlagg(
+                dbms_lob.substr(rtrim(xmlagg(
                     xmlelement(e, cols.column_name, ',') order by cols.position
-                ).extract('//text()').getclobval(), ','),
+                ).extract('//text()').getclobval(), ','), 4000, 1),
                 CASE user_constraints.constraint_type
                     WHEN 'P' THEN 1
                     ELSE 0
@@ -239,9 +239,9 @@ class DatabaseIntrospection(BaseDatabaseIntrospection):
         cursor.execute("""
             SELECT
                 cons.constraint_name,
-                rtrim(xmlagg(
+                dbms_lob.substr(rtrim(xmlagg(
                     xmlelement(e, cols.column_name, ',') order by cols.position
-                ).extract('//text()').getclobval(), ','),
+                ).extract('//text()').getclobval(), ','), 4000, 1),
                 LOWER(rcols.table_name),
                 LOWER(rcols.column_name)
             FROM
@@ -270,12 +270,12 @@ class DatabaseIntrospection(BaseDatabaseIntrospection):
             SELECT
                 ind.index_name,
                 LOWER(ind.index_type),
-                rtrim(xmlagg(
+                dbms_lob.substr(rtrim(xmlagg(
                     xmlelement(e, cols.column_name, ',') order by cols.column_position
-                ).extract('//text()').getclobval(), ','),
-                rtrim(xmlagg(
+                ).extract('//text()').getclobval(), ','), 4000, 1),
+                dbms_lob.substr(rtrim(xmlagg(
                     xmlelement(e, cols.descend, ',') order by cols.column_position
-                ).extract('//text()').getclobval(), ',')
+                ).extract('//text()').getclobval(), ','), 4000, 1)
             FROM
                 user_ind_columns cols, user_indexes ind
             WHERE
