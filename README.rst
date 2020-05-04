@@ -2,7 +2,7 @@
 Django
 ======
 
-*** This fork is made to make Django works with Oracle 10g and 11g with changes in introspection.py ***
+*** This fork is made to make Django works with Oracle 10g and 11g with changes in introspection.py **
 
 Django is a high-level Python Web framework that encourages rapid development
 and clean, pragmatic design. Thanks for checking it out.
