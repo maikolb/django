@@ -81,7 +81,7 @@ class DatabaseIntrospection(BaseDatabaseIntrospection):
                     ELSE char_length
                 END as internal_size,
                 CASE
-                    WHEN identity_column = 'YES' THEN 1
+                    WHEN column_id = 1 THEN 1
                     ELSE 0
                 END as is_autofield
             FROM user_tab_cols
@@ -111,18 +111,18 @@ class DatabaseIntrospection(BaseDatabaseIntrospection):
 
     def get_sequences(self, cursor, table_name, table_fields=()):
         cursor.execute("""
-            SELECT
-                user_tab_identity_cols.sequence_name,
-                user_tab_identity_cols.column_name
-            FROM
-                user_tab_identity_cols,
-                user_constraints,
-                user_cons_columns cols
-            WHERE
-                user_constraints.constraint_name = cols.constraint_name
-                AND user_constraints.table_name = user_tab_identity_cols.table_name
-                AND cols.column_name = user_tab_identity_cols.column_name
-                AND user_constraints.constraint_type = 'P'
+            SELECT user_sequences.sequence_name,
+                    user_tab_cols.column_name
+                FROM   user_tab_cols,
+                    user_sequences,
+                    user_constraints,
+                    user_cons_columns cols
+                WHERE  user_constraints.constraint_name = cols.constraint_name
+                AND    user_constraints.table_name = user_tab_cols.table_name
+                AND    cols.column_name = user_tab_cols.column_name
+                AND    ('SEQ_' || user_tab_cols.table_name = user_sequences.sequence_name)
+                AND    user_constraints.constraint_type = 'P'
+                AND    user_tab_cols.column_id = 1
                 AND user_tab_identity_cols.table_name = UPPER(%s)
         """, [table_name])
         # Oracle allows only one identity column per table.
@@ -201,7 +201,9 @@ class DatabaseIntrospection(BaseDatabaseIntrospection):
         cursor.execute("""
             SELECT
                 user_constraints.constraint_name,
-                LISTAGG(LOWER(cols.column_name), ',') WITHIN GROUP (ORDER BY cols.position),
+                rtrim(xmlagg(
+                    xmlelement(e, cols.column_name, ',') order by cols.position
+                ).extract('//text()').getclobval(), ','),
                 CASE user_constraints.constraint_type
                     WHEN 'P' THEN 1
                     ELSE 0
@@ -237,7 +239,9 @@ class DatabaseIntrospection(BaseDatabaseIntrospection):
         cursor.execute("""
             SELECT
                 cons.constraint_name,
-                LISTAGG(LOWER(cols.column_name), ',') WITHIN GROUP (ORDER BY cols.position),
+                rtrim(xmlagg(
+                    xmlelement(e, cols.column_name, ',') order by cols.position
+                ).extract('//text()').getclobval(), ','),
                 LOWER(rcols.table_name),
                 LOWER(rcols.column_name)
             FROM
@@ -266,8 +270,12 @@ class DatabaseIntrospection(BaseDatabaseIntrospection):
             SELECT
                 ind.index_name,
                 LOWER(ind.index_type),
-                LISTAGG(LOWER(cols.column_name), ',') WITHIN GROUP (ORDER BY cols.column_position),
-                LISTAGG(cols.descend, ',') WITHIN GROUP (ORDER BY cols.column_position)
+                rtrim(xmlagg(
+                    xmlelement(e, cols.column_name, ',') order by cols.column_position
+                ).extract('//text()').getclobval(), ','),
+                rtrim(xmlagg(
+                    xmlelement(e, cols.descend, ',') order by cols.column_position
+                ).extract('//text()').getclobval(), ',')
             FROM
                 user_ind_columns cols, user_indexes ind
             WHERE
