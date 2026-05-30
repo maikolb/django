@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 512 512">
+  <defs>
+    <radialGradient id="bg" cx="50%" cy="38%" r="75%">
+      <stop offset="0%" stop-color="#1b2444"/>
+      <stop offset="60%" stop-color="#0c1020"/>
+      <stop offset="100%" stop-color="#05050d"/>
+    </radialGradient>
+    <radialGradient id="rim" cx="50%" cy="50%" r="50%">
+      <stop offset="70%" stop-color="#46d8ff"/>
+      <stop offset="100%" stop-color="#1a6fff"/>
+    </radialGradient>
+  </defs>
+  <rect width="512" height="512" rx="96" fill="url(#bg)"/>
+  <rect x="78"  y="120" width="70" height="70" rx="10" fill="#b06bff" opacity=".9"/>
+  <rect x="360" y="110" width="80" height="80" rx="10" fill="#ff5ec7" opacity=".9"/>
+  <rect x="120" y="360" width="64" height="64" rx="10" fill="#ffe45e" opacity=".9"/>
+  <rect x="350" y="350" width="74" height="74" rx="10" fill="#6fe0ff" opacity=".9"/>
+  <ellipse cx="256" cy="278" rx="120" ry="92" fill="url(#rim)"/>
+  <ellipse cx="256" cy="278" rx="92"  ry="68" fill="#000008"/>
+  <text x="256" y="300" font-size="120" text-anchor="middle" fill="#ffd84d" font-family="Arial" font-weight="bold">★</text>
+</svg>

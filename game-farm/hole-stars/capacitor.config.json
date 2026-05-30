@@ -1,0 +1,7 @@
+{
+  "appId": "com.gamefarm.holestars",
+  "appName": "Hole Stars",
+  "webDir": ".",
+  "server": { "androidScheme": "https" },
+  "android": { "backgroundColor": "#05050dff" }
+}

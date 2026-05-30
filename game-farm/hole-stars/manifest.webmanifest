@@ -1,0 +1,14 @@
+{
+  "name": "Hole Stars Neon",
+  "short_name": "Hole Stars",
+  "description": "Engula tudo e cresça! Jogo arcade 3D neon.",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "fullscreen",
+  "orientation": "portrait",
+  "background_color": "#05050d",
+  "theme_color": "#0a0a16",
+  "icons": [
+    { "src": "icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any maskable" }
+  ]
+}
