@@ -1,6 +1,17 @@
+# Node / Capacitor
 node_modules/
-android/
 ios/
+
+# Android build artifacts (keep the project, ignore outputs)
+android/.gradle/
+android/build/
+android/app/build/
+android/captures/
+android/.idea/
+android/local.properties
+android/app/release/
 *.apk
 *.aab
+*.keystore
+
 .DS_Store

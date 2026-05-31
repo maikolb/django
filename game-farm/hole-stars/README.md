@@ -29,23 +29,34 @@ Quanto maior, mais coisas grandes você devora (flores → arbustos → árvores
 
 ---
 
-## 📱 Virar app Android (3 caminhos)
+## 📱 Baixar o APK e instalar no celular (RECOMENDADO)
 
-### Caminho 1 — PWA (mais rápido, sem compilar nada)
-O jogo já é um **PWA instalável**. No Chrome do Android: menu → *"Adicionar à tela inicial"*.
-Vira um ícone que abre em tela cheia, como app nativo.
+O jogo já tem um **projeto Android nativo** (pasta `android/`) e um **GitHub Action** que
+compila o `.apk` na nuvem — você não precisa instalar nada no seu PC.
 
-### Caminho 2 — APK com Capacitor (vira `.apk` de verdade pra Play Store)
-Numa máquina com **Node.js + JDK 17 + Android SDK**:
+**Passo a passo:**
+1. No GitHub, vá na aba **Actions** → workflow **"Build Hole Stars APK"**.
+2. Clique em **"Run workflow"** (ou ele roda sozinho quando este jogo muda).
+3. Espere ~3-5 min ficar verde ✅.
+4. Abra o run → seção **Artifacts** → baixe **`hole-stars-debug-apk`** (é um `.zip` com o `app-debug.apk` dentro).
+5. Passe o `.apk` pro celular, toque pra instalar (ative *"Instalar apps de fontes desconhecidas"* quando pedir).
+6. Pronto — o ícone **Hole Stars** aparece na sua gaveta de apps. 🎮
 
+> APK *debug* é assinado com chave de debug e serve perfeitamente pra testar. Pra publicar na
+> Play Store depois, geramos um `.aab` assinado (passo do roadmap).
+
+## 📱 Outras formas de testar
+
+### PWA (sem compilar)
+No Chrome do Android, abra a URL do jogo → menu → *"Adicionar à tela inicial"*.
+
+### Build local (se você tiver Android SDK no PC)
 ```bash
 cd game-farm/hole-stars
 npm install
-npx cap init "Hole Stars" com.gamefarm.holestars --web-dir=.
-npx cap add android
 npx cap sync android
 cd android && ./gradlew assembleDebug
-# APK gerado em: android/app/build/outputs/apk/debug/app-debug.apk
+# APK em: android/app/build/outputs/apk/debug/app-debug.apk
 ```
 
 ### Caminho 3 — TWA / Bubblewrap (empacota a PWA na Play Store)
